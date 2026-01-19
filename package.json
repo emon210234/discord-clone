@@ -2,11 +2,12 @@
   "name": "discord-clone",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/main/main.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
+    "start": "electron",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/emon210234/discord-clone/issues"
   },
-  "homepage": "https://github.com/emon210234/discord-clone#readme"
+  "homepage": "https://github.com/emon210234/discord-clone#readme",
+  "devDependencies": {
+    "electron": "^40.0.0"
+  }
 }
