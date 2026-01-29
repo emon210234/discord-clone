@@ -1,0 +1,131 @@
+/* Reset default browser styles */
+* {
+  margin: 0;
+  padding:  0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background:  #36393f;
+  color: #dcddde;
+  overflow: hidden;
+}
+
+/* Main app container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Header styling */
+.header {
+  background: #202225;
+  padding: 15px 20px;
+  border-bottom: 1px solid #000;
+}
+
+.header h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Messages container */
+.messages-container {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: #36393f;
+}
+
+/* Individual message styling */
+.message {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #40444b;
+  border-radius: 5px;
+  word-wrap: break-word;
+}
+
+.message .username {
+  color: #7289da;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.message .text {
+  color: #dcddde;
+}
+
+/* Input area at bottom */
+.input-container {
+  display: flex;
+  padding: 20px;
+  background: #40444b;
+  border-top: 1px solid #000;
+  gap: 10px;
+}
+
+#messageInput {
+  flex: 1;
+  padding: 10px 15px;
+  background: #202225;
+  border: none;
+  border-radius: 5px;
+  color: #dcddde;
+  font-size: 14px;
+  outline: none;
+}
+
+#messageInput:focus {
+  background: #2c2f33;
+}
+
+#sendButton {
+  padding: 10px 25px;
+  background: #5865f2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+#sendButton:hover {
+  background: #4752c4;
+}
+
+#sendButton:active {
+  background: #3c45a5;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clear-btn {
+  padding: 8px 15px;
+  background: #ed4245;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+
+.clear-btn:hover {
+  background: #c03537;
+}
+
+/* Timestamp styling */
+.timestamp {
+  color: #72767d;
+  font-size: 11px;
+  margin-left: 8px;
+}

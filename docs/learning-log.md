@@ -1,3 +1,5 @@
 1. Why can't renderer save files? 
 Ans: Anyone can walk in. If it could save files the hacker can delete the entire drive, steal passwords and install viruses. Only trusted code runs in the backend. It acts as a security guard. 
 2. In factorio, researching military tech gives me weapons and turrets. Similarly in this project, installing libraries unlocks capabilities that I can build with. 
+
+3. So basically, what I think about this project is that I want to learn about system thinking. Also I will learn about inter process communication. In this project, I see that main process is seperated from the frontend process primarily because of the security reasons. Also lastly I learned about the contextIsolation. what it means that frontend and backend can have same javascript context window if I want to. But that's not a good idea actually. Cause if frontend could access node features such as file systems then anyone using my application has the potential of deleting or stealing data.
