@@ -1,13 +1,12 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-// Expose protected methods to the Renderer
 contextBridge.exposeInMainWorld('electronAPI', {
-  // Load all messages from file
+  // Existing file operations
   loadMessages: () => ipcRenderer.invoke('load-messages'),
-  
-  // Save a single message to file
   saveMessage: (message) => ipcRenderer.invoke('save-message', message),
+  clearMessages: () => ipcRenderer.invoke('clear-messages'),
   
-  // Clear all messages
-  clearMessages: () => ipcRenderer.invoke('clear-messages')
+  // NEW: Server control
+  startServer: (port) => ipcRenderer.invoke('start-server', port),
+  stopServer: () => ipcRenderer.invoke('stop-server')
 });

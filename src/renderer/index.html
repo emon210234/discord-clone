@@ -3,22 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" 
-      content="default-src 'none'; 
-               script-src 'self'; 
-               style-src 'self'; 
-               img-src 'self' data: https:; 
-               font-src 'self'; 
-               connect-src 'self' ws: wss:;">
+        content="default-src 'self'; 
+                 script-src 'self'; 
+                 style-src 'self' 'unsafe-inline'; 
+                 img-src 'self' data:; 
+                 connect-src 'self' ws: wss: http://localhost:* http://*:3000;">
+  
   <title>My Chat App</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   
-  <div class="app-container">
+  <!-- Connection Panel -->
+  <div id="connectionPanel" class="connection-panel">
+    <h2>🚀 Connect to Chat</h2>
+    <div class="connection-form">
+      <input 
+        type="text" 
+        id="usernameInput" 
+        placeholder="Your username..."
+        value="User"
+      />
+      <input 
+        type="text" 
+        id="serverInput" 
+        placeholder="Server address..."
+        value="http://localhost:3000"
+      />
+      <button id="connectBtn">Connect</button>
+      <button id="hostServerBtn">Host Server</button>
+    </div>
+    <div id="connectionStatus"></div>
+  </div>
+
+  <!-- Chat Panel (hidden until connected) -->
+  <div id="chatPanel" class="app-container" style="display: none;">
     
     <div class="header">
       <h1>💬 My Chat App</h1>
-      <button id="clearButton" class="clear-btn">🗑️ Clear All</button>
+      <div class="header-controls">
+        <span id="userCount" class="user-count">0 users</span>
+        <button id="disconnectBtn" class="disconnect-btn">Disconnect</button>
+        <button id="clearButton" class="clear-btn">🗑️ Clear Local</button>
+      </div>
     </div>
     
     <div id="messages" class="messages-container">
@@ -31,12 +58,18 @@
         id="messageInput" 
         placeholder="Type a message..."
         autocomplete="off"
+        disabled
       />
-      <button id="sendButton">Send</button>
+      <button id="sendButton" disabled>Send</button>
     </div>
     
   </div>
   
+  <!-- Load Socket.IO client from LOCAL file -->
+  <script src="socket.io.min.js"></script>
+  
+  <!-- Load our scripts -->
+  <script src="chat-client.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -24,5 +24,9 @@
   "homepage": "https://github.com/emon210234/discord-clone#readme",
   "devDependencies": {
     "electron": "^40.0.0"
+  },
+  "dependencies": {
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3"
   }
 }

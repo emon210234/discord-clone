@@ -1,17 +1,15 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs').promises;
+const ChatServer = require('./server');  // ← Import server
 
-// Get the app root directory (where package.json is)
-const APP_ROOT = path.join(__dirname, '../..');
-
-// Path to renderer files
-const RENDERER_PATH = path.join(APP_ROOT, 'src/renderer/index.html');
-
-// Path to data file
+// Paths
 const DATA_FILE = path.join(app.getPath('userData'), 'messages.json');
+const PRELOAD_PATH = path.join(__dirname, 'preload.js');
+const RENDERER_PATH = path.join(__dirname, '../renderer/index.html');
 
 let mainWindow;
+let chatServer;  // ← Server instance
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -20,30 +18,27 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
+      preload: PRELOAD_PATH
     }
   });
 
-  mainWindow.loadFile(RENDERER_PATH);  // ← Fixed!
+  mainWindow.loadFile(RENDERER_PATH);
   mainWindow.webContents.openDevTools();
 }
 
-// Initialize data file if it doesn't exist
+// Initialize data file
 async function initializeDataFile() {
   try {
     await fs.access(DATA_FILE);
-    console.log('Data file exists:', DATA_FILE);
+    console.log('✅ Data file exists:', DATA_FILE);
   } catch {
-    // File doesn't exist, create it
     const initialData = { messages: [] };
     await fs.writeFile(DATA_FILE, JSON.stringify(initialData, null, 2));
-    console.log('Created new data file:', DATA_FILE);
+    console.log('✅ Created new data file');
   }
 }
 
-// IPC Handlers - Main Process listens for these
-
-// Load all messages
+// IPC Handlers (keep existing ones)
 ipcMain.handle('load-messages', async () => {
   try {
     const data = await fs.readFile(DATA_FILE, 'utf-8');
@@ -55,28 +50,20 @@ ipcMain.handle('load-messages', async () => {
   }
 });
 
-// Save a new message
 ipcMain.handle('save-message', async (event, message) => {
   try {
-    // Read current data
     const data = await fs.readFile(DATA_FILE, 'utf-8');
     const parsed = JSON.parse(data);
-    
-    // Add new message
     parsed.messages.push(message);
-    
-    // Write back to file
     await fs.writeFile(DATA_FILE, JSON.stringify(parsed, null, 2));
-    
-    console.log('Message saved:', message);
+    console.log('✅ Message saved to file');
     return { success: true };
   } catch (error) {
-    console.error('Error saving message:', error);
+    console.error('❌ Error saving message:', error);
     return { success: false, error: error.message };
   }
 });
 
-// Delete all messages
 ipcMain.handle('clear-messages', async () => {
   try {
     const initialData = { messages: [] };
@@ -88,6 +75,35 @@ ipcMain.handle('clear-messages', async () => {
   }
 });
 
+// NEW: Server control
+ipcMain.handle('start-server', async (event, port) => {
+  try {
+    if (chatServer) {
+      return { success: false, error: 'Server already running' };
+    }
+    
+    chatServer = new ChatServer(port || 3000);
+    chatServer.start();
+    return { success: true, port: port || 3000 };
+  } catch (error) {
+    console.error('Error starting server:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('stop-server', async () => {
+  try {
+    if (chatServer) {
+      chatServer.stop();
+      chatServer = null;
+    }
+    return { success: true };
+  } catch (error) {
+    console.error('Error stopping server:', error);
+    return { success: false, error: error.message };
+  }
+});
+
 // App lifecycle
 app.whenReady().then(async () => {
   await initializeDataFile();
@@ -95,6 +111,11 @@ app.whenReady().then(async () => {
 });
 
 app.on('window-all-closed', () => {
+  // Stop server when app closes
+  if (chatServer) {
+    chatServer.stop();
+  }
+  
   if (process.platform !== 'darwin') {
     app.quit();
   }
